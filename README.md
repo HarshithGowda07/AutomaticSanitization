@@ -1,6 +1,6 @@
 # AutomaticSanitization using line-following robot
 
-**Introduction**
+**#Introduction**
 During the COVID-19 pandemic, maintaining hygiene and minimizing human contact became critical to reducing the spread of the virus. One of the key measures was the frequent use of hand sanitizers. However, manual sanitization processes often required human intervention, which could lead to cross-contamination or inefficiency.
 
 To address this issue, we developed an Automatic Sanitization Line-Following Robot. This robot is designed to autonomously follow a predefined path while continuously sanitizing the surrounding area, eliminating the need for manual intervention and ensuring consistent and efficient sanitization.
