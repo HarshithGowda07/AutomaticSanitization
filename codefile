@@ -1,0 +1,107 @@
+#include <Servo.h>
+
+// Define motor pins
+#define motorA1 2
+#define motorA2 3
+#define motorB1 4
+#define motorB2 5
+
+// Define line sensor pins
+#define leftSensor A0
+#define middleSensor A1
+#define rightSensor A2
+
+// Define sanitizer sprayer pin
+#define sprayerPin 9
+
+// Define threshold for line detection
+int threshold = 500;
+
+// Create servo object for sanitizer sprayer
+Servo sprayerServo;
+
+void setup() {
+  // Set motor pins as output
+  pinMode(motorA1, OUTPUT);
+  pinMode(motorA2, OUTPUT);
+  pinMode(motorB1, OUTPUT);
+  pinMode(motorB2, OUTPUT);
+
+  // Set sensor pins as input
+  pinMode(leftSensor, INPUT);
+  pinMode(middleSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+
+  // Attach servo to the sprayer pin
+  sprayerServo.attach(sprayerPin);
+
+  // Initialize serial communication
+  Serial.begin(9600);
+
+  // Start sanitization as soon as the robot is powered on
+  startSanitization();
+}
+
+void loop() {
+  // Read sensor values
+  int leftValue = analogRead(leftSensor);
+  int middleValue = analogRead(middleSensor);
+  int rightValue = analogRead(rightSensor);
+
+  // Line following logic
+  if (middleValue > threshold) {
+    // Move forward
+    moveForward();
+  } else if (leftValue > threshold) {
+    // Turn left
+    turnLeft();
+  } else if (rightValue > threshold) {
+    // Turn right
+    turnRight();
+  } else {
+    // Stop if no line is detected
+    stopMotors();
+    stopSanitization(); // Stop sanitization when the robot stops
+  }
+}
+
+void moveForward() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
+  startSanitization(); // Ensure sanitization is active while moving
+}
+
+void turnLeft() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, HIGH);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
+  startSanitization(); // Ensure sanitization is active while turning
+}
+
+void turnRight() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
+  startSanitization(); // Ensure sanitization is active while turning
+}
+
+void stopMotors() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, LOW);
+}
+
+void startSanitization() {
+  // Activate the sanitizer sprayer (e.g., move servo or turn on pump)
+  sprayerServo.write(90); // Adjust angle as needed for continuous spraying
+}
+
+void stopSanitization() {
+  // Deactivate the sanitizer sprayer
+  sprayerServo.write(0); // Adjust angle as needed to stop spraying
+}
